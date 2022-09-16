@@ -1,38 +1,108 @@
-# create-svelte
+cytoscape-node-text-edit
+================================================================================
+ 
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## Description
 
-## Creating a project
 
-If you're seeing this, you've probably already done this step. Congrats!
+This extension allows node labels to be edited in place. 
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+![Demo](./demo.gif)
 
-# create a new project in my-app
-npm create svelte@latest my-app
+## Dependencies
+
+ * Cytoscape.js ^3.23.0
+
+
+## Usage instructions
+
+Download the library:
+ * via direct download in the repository (probably from a tag).
+
+Import the library as appropriate for your project:
+
+ES import:
+
+```js
+import cytoscape from 'cytoscape';
+import nodetextedit from 'cytoscape-node-text-edit';
+
+cytoscape.use( nodetextedit );
 ```
 
-## Developing
+CommonJS require:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+```js
+let cytoscape = require('cytoscape');
+let nodetextedit = require('cytoscape-node-text-edit');
 
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+cytoscape.use( nodetextedit ); // register extension
 ```
 
-## Building
+AMD:
 
-To create a production version of your app:
-
-```bash
-npm run build
+```js
+require(['cytoscape', 'cytoscape-node-text-edit'], function( cytoscape, nodetextedit ){
+  nodetextedit( cytoscape ); // register extension
+});
 ```
 
-You can preview the production build with `npm run preview`.
+Plain HTML/JS has the extension registered for you automatically, because no `require()` is needed.
+```js
+  <script src="cytoscape-node-text-edit.js"></script>
+```
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Initialisation
+
+You initialise the extension on the Cytoscape instance:
+
+```js
+
+let cy = cytoscape({
+  container: document.getElementById('#cy'),
+	/* ... */
+});
+
+// the default values of each option are outlined below:
+let defaults = {
+  selectAllText : false, // If true, selects all text when starting edit. Otherwise, selects last character.
+  backgroundColor: 'white', // Colour of background overlay
+  backgroundOpacity: 0.9, // Opacity of background overlay
+  nodeLabel: 'name', // Which node.data() property holds the label
+  showLogs: false, // Show debugging info in console
+  zIndex: 1000 // zIndex of editing overlay
+};
+
+
+let eh = cy.nodetextedit( defaults );
+
+```
+
+ 
+
+## Build targets
+
+* `npm run dev` : Uses Vite Dev server 
+* `npm run build` : Build `./src/**` into `/package/cytoscape-node-text-edit.js`
+* `npm run watch` : Automatically build on changes with live reloading (N.b. you must already have an HTTP server running)
+
+* `npm run lint` : Run eslint on the source
+
+N.b. all builds use babel, so modern ES features can be used in the `src`.
+
+
+## Publishing instructions
+
+This project is set up to automatically be published to npm and bower.  To publish:
+
+1. Build the extension : `npm run build:release`
+1. Commit the build : `git commit -am "Build for release"`
+1. Bump the version number and tag: `npm version major|minor|patch`
+1. Push to origin: `git push && git push --tags`
+1. Publish to npm: `npm publish .`
+ 
+
+
+## Credits
+
+This extension was created starting from ([cytoscape-edgehandles.js](https://github.com/cytoscape/cytoscape.js-edgehandles))

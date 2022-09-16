@@ -1,5 +1,5 @@
 {
-	"name": "git---cy-node-text-edit",
+	"name": "cytoscape-node-text-edit",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
